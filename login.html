@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в крутое</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Вход в аккаунт</h2>
+            <form id="login-form" class="auth-form" onsubmit="loginUser(event)">
+                <input type="text" id="login" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <button type="submit" class="btn-auth">Войти</button>
+            </form>
+            <div id="message" class="message"></div>
+            <p>Нет аккаунта? и слава богу <a href="register.html">Зарегистрироваться</a></p>
+            <a href="/" class="back-home">← На главную</a>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
