@@ -1,1 +1,32 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация на крутое</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Регистрация</h2>
+            <form id="register-form" class="auth-form" onsubmit="registerUser(event)">
+                <input type="text" id="full_name" placeholder="Полное имя" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="text" id="login" placeholder="Логин" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <select id="role">
+                    <option value="user">Обычный пользователь</option>
+                    <option value="moderator">Модератор</option>
+                    <option value="admin">Админ</option>
+                </select>
+                <button type="submit" class="btn-auth">Зарегистрироваться</button>
+            </form>
+            <div id="message" class="message"></div>
+            <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+            <a href="/" class="back-home">← На главную</a>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
