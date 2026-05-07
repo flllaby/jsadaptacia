@@ -1,0 +1,84 @@
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    login VARCHAR(100) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role VARCHAR(50) CHECK (role IN ('admin', 'moderator', 'user')) DEFAULT 'user',
+    coolness_score INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cool_actions (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    coolness_points INT CHECK (coolness_points BETWEEN 1 AND 100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cool_schedules (
+    id SERIAL PRIMARY KEY,
+    activity_title VARCHAR(200) NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    location VARCHAR(150)
+);
+
+CREATE TABLE mentors (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expertise VARCHAR(100)
+);
+
+CREATE TABLE schedule_mentors (
+    id SERIAL PRIMARY KEY,
+    schedule_id INT NOT NULL REFERENCES cool_schedules(id) ON DELETE CASCADE,
+    mentor_id INT NOT NULL REFERENCES mentors(id) ON DELETE CASCADE,
+    UNIQUE(schedule_id, mentor_id)
+);
+
+INSERT INTO users (full_name, email, login, password_hash, role, coolness_score) VALUES
+('Иван Крутой42', 'ivan42@cool.com', 'ivan_cool42', 'hash123', 'admin', 150),
+('Никита zxc', 'nikita@zxc.com', 'NikitaZXC', 'hash456', 'user', 85),
+('Саша 1000-7 тру канеки', 'SashaKaneki@True.com', 'Sasha1000-7TrueKaneki', 'hash789', 'user', 42),
+('Маша 240km/peek absolute', 'MashaAbsolute@peek.com', 'Masha240km/peekAbsolute', 'hash101', 'moderator', 200);
+
+INSERT INTO cool_actions (title, description, user_id, coolness_points) VALUES
+('Вышел на сфе в миду', 'Публичное унижение вражеского мидера(были слезы)', 1, 50),
+('Удалил доту', 'он скачает ее спустя 3 дня(к сожалению)', 2, 70),
+('неплохо потинкерила', 'описание не  требуется', 3, 30),
+('', 'За месяц поставил друга на доску', 4, 45);
+
+INSERT INTO cool_schedules (activity_title, start_time, location) VALUES
+('Экскурсия по логову рошана', '2026-05-15 15:00:00', 'Логово рошана'),
+('Засадка огорода на Чене(Chen)', '2026-05-20 18:00:00', 'Под тройкой'),
+('Экскурсия по зоопарку в рейтинговых играх', '2026-05-25 14:00:00', 'Рейтинг (10-2500ммр)'),
+('Что-то крутое', '2026-05-30 11:00:00', 'Крутое место');
+
+INSERT INTO mentors (user_id, expertise) VALUES
+(1, 'Бустерство'),
+(4, 'Амбреллинг'),
+(2, 'Дебустинг');
+
+
+INSERT INTO schedule_mentors (schedule_id, mentor_id) VALUES
+(1, 1),  
+(2, 3),  
+(3, 2),  
+(4, 3);  
+
+SELECT login, full_name, coolness_score FROM users ORDER BY coolness_score DESC;
+
+SELECT a.title, a.description, u.login, a.coolness_points 
+FROM cool_actions a
+JOIN users u ON a.user_id = u.id
+ORDER BY a.coolness_points DESC;
+
+SELECT cs.activity_title, cs.start_time, cs.location, u.login AS mentor_name, m.expertise
+FROM schedule_mentors sm
+JOIN cool_schedules cs ON sm.schedule_id = cs.id
+JOIN mentors m ON sm.mentor_id = m.id
+JOIN users u ON m.user_id = u.id
+ORDER BY cs.start_time;
